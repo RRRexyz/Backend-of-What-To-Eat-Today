@@ -21,17 +21,33 @@ def get_db():
 
 
 
-@app.get("/dish/{canteen}")
-def get_current_canteen_dishes(canteen: schemas.Canteen, db: Session = Depends(get_db)):
+@app.get("/dish/{canteen}/{floor}")
+async def get_current_canteen_dishes(canteen: schemas.Canteen, floor: int, db: Session = Depends(get_db)):
     if canteen == schemas.Canteen.xinyuan:
-        return crud.get_canteen_all_dishes(db, "欣园")
+        return crud.get_canteen_all_dishes(db, "欣园", floor)
     elif canteen == schemas.Canteen.yueyuan:
-        return crud.get_canteen_all_dishes(db, "悦园")
+        return crud.get_canteen_all_dishes(db, "悦园", floor)
 
 
 @app.post("/dishadd")
-def add_dishes(dishes: List[schemas.DishItem], db: Session = Depends(get_db)):
-    crud.add_dishes(db, dishes)
+async def add_dishes(dishes: List[schemas.DishItem], db: Session = Depends(get_db)):
+    for dish in dishes:
+        crud.add_dishes(db, dish)
+    return {"detail": "Add Success"}
+
+
+@app.delete("/dishdel")
+async def delete_dishes(dishes: List[schemas.DishDelItem], db: Session = Depends(get_db)):
+    for dish in dishes:
+        crud.delete_dishes(db, dish)
+    return {"detail": "Delete Success"}
+
+
+@app.put("/dishmod")
+async def modify_dishes(dishes: List[schemas.DishItem], db: Session = Depends(get_db)):
+    for dish in dishes:
+        crud.modify_dishes(db, dish)
+    return {"detail": "Modify Success"}
 
 
 

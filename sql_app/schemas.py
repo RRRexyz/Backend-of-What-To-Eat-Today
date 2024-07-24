@@ -28,9 +28,11 @@ class DishItem(BaseModel):
     window: int
 
     
-class DishList(BaseModel):
-    dishlist: List[DishItem]
-
+class DishDelItem(BaseModel):
+    name: str
+    canteen: str
+    floor: int
+    window: int
 
 
 # class ItemBase(BaseModel):
