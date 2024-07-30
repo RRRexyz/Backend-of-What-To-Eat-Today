@@ -52,6 +52,12 @@ def modify_dishes(db: Session, dish: schemas.DishItem):
         db.commit()
         
 
+def search_dish(db: Session, name: str, skip: int = 0, limit: int = 200) -> bool:
+    return db.query(models.Dish) \
+            .filter(models.Dish.name.contains(name)) \
+            .offset(skip).limit(limit).all()
+
+
 
 
 # def update_book_by_id(db:Session, bookId:int, book:schemas.BooksBase):

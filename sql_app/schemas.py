@@ -35,6 +35,9 @@ class DishDelItem(BaseModel):
     window: int
 
 
+class DishSearchItem(BaseModel):
+    name: str
+
 # class ItemBase(BaseModel):
 #     title: str
 #     description: str | None = None

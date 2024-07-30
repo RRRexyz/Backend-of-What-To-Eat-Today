@@ -1,14 +1,32 @@
 from fastapi import Depends, FastAPI, HTTPException
 from sqlalchemy.orm import Session
-
+from fastapi.responses import HTMLResponse
 from sql_app import crud, models, schemas
 from sql_app.database import SessionLocal, engine
 
 from typing import List
 
+
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
+
+html = """<!DOCTYPE html>
+<html>
+    <head>
+        <title>TestFormData</title>
+    </head>
+    <body>
+        <script>
+
+        </script>
+    </body>
+</html>
+    """
+
+@app.get("/")
+async def get():
+    return HTMLResponse(html)
 
 
 # Dependency
@@ -48,6 +66,11 @@ async def modify_dishes(dishes: List[schemas.DishItem], db: Session = Depends(ge
     for dish in dishes:
         crud.modify_dishes(db, dish)
     return {"detail": "Modify Success"}
+
+
+@app.post("/dishget")
+async def search_dish(input: schemas.DishSearchItem, db: Session = Depends(get_db)):
+    return crud.search_dish(db, input.name)
 
 
 
