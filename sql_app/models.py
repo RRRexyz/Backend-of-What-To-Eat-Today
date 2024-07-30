@@ -1,51 +1,70 @@
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Numeric
+from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Numeric,LargeBinary, Text
 from sqlalchemy.orm import relationship
 
 from .database import Base
 
-
-# class User(Base):
-#     __tablename__ = "users"
-
-#     id = Column(Integer, primary_key=True)
-#     email = Column(String, unique=True, index=True)
-#     hashed_password = Column(String)
-#     is_active = Column(Boolean, default=True)
-
-#     items = relationship("Item", back_populates="owner")
+class User(Base):   # This class is to be used in the future for user management
+    __tablename__ = "users"
+    
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    username = Column(String(20), index=True)
+    sdu_id = Column(String(20), index=True, unique=True)
+    is_admin = Column(Boolean, default=False)
 
 
-# class Item(Base):
-#     __tablename__ = "items"
+class Admin(Base):   # The users with privileges to do data modification, whose login should be different from the normal users
+    __tablename__ = "admins"
 
-#     id = Column(Integer, primary_key=True)
-#     title = Column(String, index=True)
-#     description = Column(String, index=True)
-#     owner_id = Column(Integer, ForeignKey("users.id"))
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    user_id = Column(Integer, ForeignKey("users.id"))
+    access_name = Column(String(20), index=True)
+    hashed_password = Column(String(64), index=True)
 
-#     owner = relationship("User", back_populates="items")
+
+class Comment(Base):   # This class is to be used in the future
+    __tablename__ = "comments"
+    
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    user_id = Column(Integer, ForeignKey("users.id"))
+    dish_id = Column(Integer, ForeignKey("dishes.id"))
+    content = Column(Text)
+    vote = Column(Integer)
+
+
+
+class Canteen(Base):  
+    __tablename__ = "canteens"
+    
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    name = Column(String(8), index=True, nullable=False, unique=True)
+    description = Column(Text, index=True)
+    image = Column(LargeBinary)
+    campus = Column(String(8), index=True, nullable=False)
+
 
 
 class Dish(Base):
     __tablename__ = "dishes"
     
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
-    canteen = Column(String, index=True)
-    floor = Column(Integer, index=True)
-    window = Column(Integer, index=True)
-    name = Column(String, index=True)
-    price = Column(Numeric, index=True)
-    measure = Column(String)
+    canteen = Column(Integer, ForeignKey("canteens.id"), index=True)
+    floor = Column(Integer, index=True, nullable=False)
+    window = Column(Integer, index=True, nullable=False)
+    name = Column(String(20), index=True, nullable=False)
+    price = Column(Numeric)
+    measure = Column(String(5))
+    image = Column(LargeBinary)
+    average_vote = Column(Numeric, default=2.5, index=True)
     
     
+#  WHAT IS THIS?
+# class NewDish(Base):
+#     __tablename__ = "new_dishes"
     
-class NewDish(Base):
-    __tablename__ = "new_dishes"
-    
-    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
-    canteen = Column(String, index=True)
-    floor = Column(Integer, index=True)
-    window = Column(Integer, index=True)
-    name = Column(String, index=True)
-    price = Column(Numeric, index=True)
-    measure = Column(String)
+#     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
+#     canteen = Column(String, index=True)
+#     floor = Column(Integer, index=True)
+#     window = Column(Integer, index=True)
+#     name = Column(String, index=True)
+#     price = Column(Numeric, index=True)
+#     measure = Column(String)
