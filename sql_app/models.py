@@ -57,14 +57,11 @@ class Dish(Base):
     average_vote = Column(Numeric, default=2.5, index=True)
     
     
-#  WHAT IS THIS?
-# class NewDish(Base):
-#     __tablename__ = "new_dishes"
+
+class NewDish(Base):
+    __tablename__ = "new_dishes"
     
-#     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
-#     canteen = Column(String, index=True)
-#     floor = Column(Integer, index=True)
-#     window = Column(Integer, index=True)
-#     name = Column(String, index=True)
-#     price = Column(Numeric, index=True)
-#     measure = Column(String)
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    dish_id = Column(Integer, ForeignKey("dishes.id"), index=True)
+
+    dish = relationship("Dish", back_populates="new_dish")
