@@ -38,3 +38,14 @@ class Dish(Base):
     measure = Column(String)
     
     
+    
+class NewDish(Base):
+    __tablename__ = "new_dishes"
+    
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    canteen = Column(String, index=True)
+    floor = Column(Integer, index=True)
+    window = Column(Integer, index=True)
+    name = Column(String, index=True)
+    price = Column(Numeric, index=True)
+    measure = Column(String)

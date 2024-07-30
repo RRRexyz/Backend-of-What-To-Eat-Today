@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from fastapi.responses import HTMLResponse
 from sql_app import crud, models, schemas
 from sql_app.database import SessionLocal, engine
-
+from random import choice
 from typing import List
 
 
@@ -39,6 +39,7 @@ def get_db():
 
 
 
+""" ************************饭菜操作************************ """
 @app.get("/dish/{canteen}/{floor}")
 async def get_current_canteen_dishes(canteen: schemas.Canteen, floor: int, db: Session = Depends(get_db)):
     if canteen == schemas.Canteen.xinyuan:
@@ -73,37 +74,28 @@ async def search_dish(input: schemas.DishSearchItem, db: Session = Depends(get_d
     return crud.search_dish(db, input.name)
 
 
-
-# @app.post("/users/", response_model=schemas.User)
-# def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
-#     db_user = crud.get_user_by_email(db, email=user.email)
-#     if db_user:
-#         raise HTTPException(status_code=400, detail="Email already registered")
-#     return crud.create_user(db=db, user=user)
-
-
-# @app.get("/users/", response_model=list[schemas.User])
-# def read_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
-#     users = crud.get_users(db, skip=skip, limit=limit)
-#     return users
+@app.get("/random/{canteen}")
+async def random_get_dish(canteen: schemas.Canteen, db: Session = Depends(get_db)):
+    dishes = crud.get_canteen_all_dishes(db, canteen, 6)
+    dish = choice(dishes)
+    return dish
+""" ************************饭菜操作************************ """
 
 
-# @app.get("/users/{user_id}", response_model=schemas.User)
-# def read_user(user_id: int, db: Session = Depends(get_db)):
-#     db_user = crud.get_user(db, user_id=user_id)
-#     if db_user is None:
-#         raise HTTPException(status_code=404, detail="User not found")
-#     return db_user
+""" ********************轮播图与上新宣传******************** """
+@app.post("/newadd")
+async def add_new_dishes(dishes: List[schemas.DishItem], db: Session = Depends(get_db)):
+    for dish in dishes:
+        crud.add_new_dishes(db, dish)
+    return {"detail": "Add Success"}
 
 
-# @app.post("/users/{user_id}/items/", response_model=schemas.Item)
-# def create_item_for_user(
-#     user_id: int, item: schemas.ItemCreate, db: Session = Depends(get_db)
-# ):
-#     return crud.create_user_item(db=db, item=item, user_id=user_id)
+@app.delete("/newdel")
+async def delete_new_dishes(dishes: List[schemas.DishDelItem], db: Session = Depends(get_db)):
+    for dish in dishes:
+        crud.delete_new_dishes(db, dish)
+    return {"detail": "Delete Success"}
+""" ********************轮播图与上新宣传******************** """
 
 
-# @app.get("/items/", response_model=list[schemas.Item])
-# def read_items(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
-#     items = crud.get_items(db, skip=skip, limit=limit)
-#     return items
+
