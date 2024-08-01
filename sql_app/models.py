@@ -38,7 +38,8 @@ class Canteen(Base):
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     name = Column(String(8), index=True, nullable=False, unique=True)
     description = Column(Text, index=True)
-    image = Column(LargeBinary)
+    # image = Column(LargeBinary)
+    image = Column(String)
     campus = Column(String(8), index=True, nullable=False)
 
 
@@ -53,8 +54,10 @@ class Dish(Base):
     name = Column(String(20), index=True, nullable=False)
     price = Column(Numeric)
     measure = Column(String(5))
-    image = Column(LargeBinary)
+    # image = Column(LargeBinary)
+    image = Column(String)
     average_vote = Column(Numeric, default=2.5, index=True)
+    
     
     
 
@@ -64,4 +67,4 @@ class NewDish(Base):
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     dish_id = Column(Integer, ForeignKey("dishes.id"), index=True)
 
-    dish = relationship("Dish", back_populates="new_dish")
+    dish = relationship("Dish")

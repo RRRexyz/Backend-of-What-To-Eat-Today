@@ -4,33 +4,27 @@ from typing import List
 from dataclasses import dataclass
 
 
-class Canteen(str, Enum):
-    xinyuan = "欣园"
-    yueyuan = "悦园"
+# class Canteen(str, Enum):
+#     xinyuan = "欣园"
+#     yueyuan = "悦园"
 
 
 @dataclass
 class DishItem(BaseModel):
-    """DishItem"""
-    """餐厅名称"""
-    canteen: str
-    """楼层号"""
+    canteen: int
     floor: int
-    """饭菜编号"""
     id: int
-    """份量"""
     measure: str
-    """名称"""
     name: str
-    """价格"""
     price: float
-    """窗口号"""
     window: int
+    average_vote: float
+    image: str
 
     
 class DishDelItem(BaseModel):
     name: str
-    canteen: str
+    canteen: int
     floor: int
     window: int
 
