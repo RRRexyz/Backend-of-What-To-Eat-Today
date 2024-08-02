@@ -5,17 +5,15 @@ from sql_app import crud, models, schemas
 from sql_app.database import SessionLocal, engine
 from random import choice
 from typing import List
-from fastapi.staticfiles import StaticFiles
-import base64
+# from fastapi.staticfiles import StaticFiles
 import pandas as pd
-import io
-import openpyxl
+
 
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
-app.mount("/pictures", StaticFiles(directory="pictures"), name="pictures")
+# app.mount("/pictures", StaticFiles(directory="pictures"), name="pictures")
 
 
 html = """<!DOCTYPE html>
@@ -60,7 +58,7 @@ async def add_dishes(dishes: List[schemas.DishItem], db: Session = Depends(get_d
     return {"detail": "Add Success"}
 
 
-@app.delete("/dishdel")
+@app.delete("/dish")
 async def delete_dishes(dishes: List[schemas.DishDelItem], db: Session = Depends(get_db)):
     for dish in dishes:
         crud.delete_dishes(db, dish)
