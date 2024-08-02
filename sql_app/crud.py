@@ -19,7 +19,9 @@ def get_all_dishes(db: Session, canteen: int, floor: int | None = None, skip: in
 def add_dishes(db: Session, dish: schemas.DishItem):    
     db_exist_dish = db.query(models.Dish).filter(models.Dish.canteen == dish.canteen,
                                                 models.Dish.floor == dish.floor,
-                                                models.Dish.window == dish.window).first()  
+                                                models.Dish.window == dish.window,
+                                                models.Dish.name == dish.name,
+                                                models.Dish.measure == dish.measure).first()  
     if db_exist_dish is None: 
         # with open(dish.image, 'rb') as f:
         #     image_data = f.read()
@@ -35,13 +37,15 @@ def add_dishes(db: Session, dish: schemas.DishItem):
         db.commit()
         db.refresh(db_dish)
     else:
-        raise HTTPException(status_code=400, detail="Try to add dish in existed window")
+        raise HTTPException(status_code=400, detail="Try to add existed dishes")
 
 
 def add_dishes_by_excel(db: Session, dish: dict):
     db_exist_dish = db.query(models.Dish).filter(models.Dish.canteen == dish["canteen"],
                                                 models.Dish.floor == dish["floor"],
-                                                models.Dish.window == dish["window"]).first()  
+                                                models.Dish.window == dish["window"],
+                                                models.Dish.name == dish["name"],
+                                                models.Dish.measure == dish["measure"]).first()  
     if db_exist_dish is None: 
         db_dish = models.Dish(canteen=dish["canteen"],
                                 floor=dish["floor"], window=dish["window"],
@@ -52,7 +56,7 @@ def add_dishes_by_excel(db: Session, dish: dict):
         db.commit()
         db.refresh(db_dish)
     else:
-        raise HTTPException(status_code=400, detail="Try to add dish in existed window")
+        raise HTTPException(status_code=400, detail="Try to add existed dishes")
 
 
 

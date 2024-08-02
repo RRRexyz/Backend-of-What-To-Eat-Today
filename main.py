@@ -68,7 +68,7 @@ async def delete_dishes(dishes: List[schemas.DishDelItem], db: Session = Depends
 
 
 @app.post("/dish/excel")
-async def upload_excel(file: UploadFile = File(...), db: Session = Depends(get_db)):
+async def upload_excel_import_dishes(file: UploadFile = File(...), db: Session = Depends(get_db)):
     if file.filename[-4:] == "xlsx":
         data = pd.read_excel(file.file)
         data_dict = data.to_dict(orient='records')
