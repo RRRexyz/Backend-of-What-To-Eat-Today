@@ -19,7 +19,7 @@ class DishItem(BaseModel):
     price: float
     window: int
     average_vote: float
-    image: str
+    image: str = "http://dummyimage.com/400x400"
 
     
 class DishDelItem(BaseModel):
@@ -29,8 +29,18 @@ class DishDelItem(BaseModel):
     window: int
 
 
-class DishSearchItem(BaseModel):
+class DishPutItem(BaseModel):
+    canteen: int
+    floor: int
+    measure: str
     name: str
+    price: float
+    window: int
+    image: str = "http://dummyimage.com/400x400"
+
+
+# class CarouselItem(BaseModel):
+    # image: str = "http://dummyimage.com/400x400"
 
 # class ItemBase(BaseModel):
 #     title: str

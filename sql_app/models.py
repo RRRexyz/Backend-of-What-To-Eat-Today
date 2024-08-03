@@ -68,3 +68,10 @@ class NewDish(Base):
     dish_id = Column(Integer, ForeignKey("dishes.id"), index=True)
 
     dish = relationship("Dish")
+
+
+class Carousel(Base):
+    __tablename__ = "carousels"
+    
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    image = Column(String)

@@ -29,9 +29,9 @@ html = """<!DOCTYPE html>
 </html>
     """
 
-@app.get("/")
-async def get():
-    return HTMLResponse(html)
+# @app.get("/")
+# async def get():
+#     return HTMLResponse(html)
 
 
 # Dependency
@@ -86,6 +86,23 @@ async def upload_excel_import_dishes(file: UploadFile = File(...), db: Session =
     return {"detail": "Add Success"}
 
 
+@app.put("/dish")
+async def modify_dish(dish: schemas.DishPutItem, db: Session = Depends(get_db)):
+    crud.modify_dish(db, dish)
+    return {"detail": "Modify Success"}
+
+    
+@app.get("/dish/{input}")
+async def search_dish(input: str, db: Session = Depends(get_db)):
+    return crud.search_dish(db, input)
+    
+    
+@app.get("/random/{canteen}")
+async def random_get_dish(canteen: int, db: Session = Depends(get_db)):
+    dishes = crud.get_all_dishes(db, canteen)
+    dish = choice(dishes)
+    return dish    
+    
     
 # @app.post("/pictures")
 # async def upload_image(file: UploadFile = File(...), db: Session = Depends(get_db)):
@@ -95,44 +112,36 @@ async def upload_excel_import_dishes(file: UploadFile = File(...), db: Session =
 #             f.write(chunk)
 #     return {"filename": file.filename}
 
-
-
-    
-
-
-# @app.put("/dishmod")
-# async def modify_dishes(dishes: List[schemas.DishItem], db: Session = Depends(get_db)):
-#     for dish in dishes:
-#         crud.modify_dishes(db, dish)
-#     return {"detail": "Modify Success"}
-
-
-# @app.post("/dishget")
-# async def search_dish(input: schemas.DishSearchItem, db: Session = Depends(get_db)):
-#     return crud.search_dish(db, input.name)
-
-
-# @app.get("/random/{canteen}")
-# async def random_get_dish(canteen: schemas.Canteen, db: Session = Depends(get_db)):
-#     dishes = crud.get_canteen_all_dishes(db, canteen, 6)
-#     dish = choice(dishes)
-#     return dish
-# """ ************************饭菜操作************************ """
+""" ************************饭菜操作************************ """
 
 
 # """ ********************轮播图与上新宣传******************** """
-# @app.post("/newadd")
-# async def add_new_dishes(dishes: List[schemas.DishItem], db: Session = Depends(get_db)):
-#     for dish in dishes:
-#         crud.add_new_dishes(db, dish)
-#     return {"detail": "Add Success"}
+@app.post("/carousel")
+async def add_carousels(carousels: List[str] = ["http://dummyimage.com/400x400"], db:Session = Depends(get_db)):
+    for carousel in carousels:
+        crud.add_carousel(db, carousel)
+    return {"detail": "Add Success"}
 
 
-# @app.delete("/newdel")
-# async def delete_new_dishes(dishes: List[schemas.DishDelItem], db: Session = Depends(get_db)):
-#     for dish in dishes:
-#         crud.delete_new_dishes(db, dish)
-#     return {"detail": "Delete Success"}
+@app.delete("/carousel")
+async def delete_cardousels(carousels: List[str] = ["http://dummyimage.com/400x400"], db:Session = Depends(get_db)):
+    for carousel in carousels:
+        crud.delete_carousel(db, carousel)
+    return {"detail": "Delete Success"} 
+
+
+@app.post("/new")
+async def add_new_dishes(new_dishes: List[int] = [1], db: Session = Depends(get_db)):
+    for new_dish in new_dishes:
+        crud.add_new_dish(db, new_dish)
+    return {"detail": "Add Success"} 
+
+
+@app.delete("/new")
+async def delete_new_dishes(new_dishes: List[int] = [1], db: Session = Depends(get_db)):
+    for new_dish in new_dishes:
+        crud.delete_new_dish(db, new_dish)
+    return {"detail": "Delete Success"} 
 # """ ********************轮播图与上新宣传******************** """
 
 
