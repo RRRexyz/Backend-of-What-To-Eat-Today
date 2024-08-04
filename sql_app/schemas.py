@@ -13,7 +13,6 @@ from dataclasses import dataclass
 class DishItem(BaseModel):
     canteen: int
     floor: int
-    id: int
     measure: str
     name: str
     price: float
@@ -39,8 +38,25 @@ class DishPutItem(BaseModel):
     image: str = "http://dummyimage.com/400x400"
 
 
-# class CarouselItem(BaseModel):
-    # image: str = "http://dummyimage.com/400x400"
+class CarouselItem(BaseModel):
+    canteen: int = 1
+    image: str = "http://dummyimage.com/400x400"
+    
+    
+class CommentItem(BaseModel):
+    user_id: int = 666666
+    dish_id: int = 1
+    content: str
+    vote: int = 3
+    time: str = "2024-08-04 12:01:59"
+
+
+class CommentDelItem(BaseModel):
+    user_id: int = 666666
+    dish_id: int = 1
+    content: str
+    time: str = "2024-08-04 12:01:59"
+
 
 # class ItemBase(BaseModel):
 #     title: str

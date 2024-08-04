@@ -29,6 +29,7 @@ class Comment(Base):   # This class is to be used in the future
     dish_id = Column(Integer, ForeignKey("dishes.id"))
     content = Column(Text)
     vote = Column(Integer)
+    time = Column(String(25), index=True)
 
 
 
@@ -74,4 +75,5 @@ class Carousel(Base):
     __tablename__ = "carousels"
     
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    canteen = canteen = Column(Integer, ForeignKey("canteens.id"), index=True)
     image = Column(String)

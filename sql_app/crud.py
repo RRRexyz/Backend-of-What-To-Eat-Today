@@ -98,10 +98,10 @@ def search_dish(db: Session, name: str, skip: int = 0, limit: int = 200):
             .offset(skip).limit(limit).all()
 
 
-def add_carousel(db: Session, carousel: str):
-    db_exist_image = db.query(models.Carousel).filter(models.Carousel.image == carousel).first()
+def add_carousel(db: Session, carousel: schemas.CarouselItem):
+    db_exist_image = db.query(models.Carousel).filter(models.Carousel.image == carousel.image).first()
     if db_exist_image is None:
-        db_image = models.Carousel(image=carousel)
+        db_image = models.Carousel(canteen=carousel.canteen,image=carousel.image)
         db.add(db_image)
         db.commit()
         db.refresh(db_image)
@@ -109,8 +109,12 @@ def add_carousel(db: Session, carousel: str):
         raise HTTPException(status_code=400, detail="Try to add existed carousels")
     
     
-def delete_carousel(db: Session, carousel: str):
-    db_image = db.query(models.Carousel).filter(models.Carousel.image == carousel).first()
+def get_carousel(db: Session, canteen: int):
+    return db.query(models.Carousel).filter(models.Carousel.canteen == canteen).all()
+    
+    
+def delete_carousel(db: Session, carousel: schemas.CarouselItem):
+    db_image = db.query(models.Carousel).filter(models.Carousel.image == carousel.image).first()
     if db_image is None:
         raise HTTPException(status_code=400, detail="Try to delete absent carousels")   
     else:
@@ -129,10 +133,43 @@ def add_new_dish(db: Session, new_dish_id: int):
         raise HTTPException(status_code=400, detail="Try to add existed new dishes")
 
 
+def get_new_dish(db: Session, canteen: int):
+    return db.query(models.Dish).filter(models.Dish.canteen == canteen,
+                                        models.Dish.id == models.NewDish.dish_id).all()
+
+
 def delete_new_dish(db: Session, new_dish_id: int):
     db_new_dish = db.query(models.NewDish).filter(models.NewDish.dish_id == new_dish_id).first()
     if db_new_dish is None:
         raise HTTPException(status_code=400, detail="Try to delete absent new dishes")
     else:
         db.delete(db_new_dish)
+        db.commit()
+
+
+def post_comment(db: Session, comment: schemas.CommentItem):
+    db_comment = models.Comment(user_id=comment.user_id,
+                                dish_id=comment.dish_id,
+                                content=comment.content,
+                                vote=comment.vote,
+                                time=comment.time)
+    db.add(db_comment)
+    db.commit()
+    db.refresh(db_comment)
+
+
+def get_comment(db: Session, canteen: int):
+    return db.query(models.Comment).filter(models.Dish.canteen == canteen,
+                                        models.Comment.dish_id == models.Dish.id).all()
+    
+    
+def delete_comment(db: Session, comment: schemas.CommentDelItem):
+    db_exist_comment = db.query(models.Comment).filter(models.Comment.user_id == comment.user_id,
+                                                    models.Comment.dish_id == comment.dish_id,
+                                                    models.Comment.content == comment.content,
+                                                    models.Comment.time == comment.time).first()
+    if db_exist_comment is None:
+        raise HTTPException(status_code=400, detail="Try to delete absent comment")
+    else:
+        db.delete(db_exist_comment)
         db.commit()
